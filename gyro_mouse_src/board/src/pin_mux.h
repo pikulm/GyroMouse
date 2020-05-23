@@ -72,6 +72,12 @@ void BOARD_InitBootPins(void);
  */
 void BOARD_InitPins(void);
 
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_I2C_ConfigurePins(void);
+
 #if defined(__cplusplus)
 }
 #endif

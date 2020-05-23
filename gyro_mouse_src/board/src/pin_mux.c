@@ -30,6 +30,7 @@ board: FRDM-KL46Z
 void BOARD_InitBootPins(void)
 {
     BOARD_InitPins();
+    BOARD_I2C_ConfigurePins();
 }
 
 /* clang-format off */
@@ -92,6 +93,58 @@ void BOARD_InitPins(void)
 
                   /* UART0 Receive Data Source Select: UART_RX pin. */
                   | SIM_SOPT5_UART0RXSRC(SOPT5_UART0RXSRC_UART_RX));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_I2C_ConfigurePins:
+- options: {callFromInitBoot: 'true', coreID: core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '31', peripheral: I2C0, signal: SCL, pin_signal: PTE24/TPM0_CH0/I2C0_SCL, slew_rate: fast, pull_enable: enable}
+  - {pin_num: '32', peripheral: I2C0, signal: SDA, pin_signal: PTE25/TPM0_CH1/I2C0_SDA, slew_rate: fast, pull_enable: enable}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_I2C_ConfigurePins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+void BOARD_I2C_ConfigurePins(void)
+{
+    /* Port E Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortE);
+
+    /* PORTE24 (pin 31) is configured as I2C0_SCL */
+    PORT_SetPinMux(PORTE, 24U, kPORT_MuxAlt5);
+
+    PORTE->PCR[24] = ((PORTE->PCR[24] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
+                      | (uint32_t)(PORT_PCR_PE_MASK)
+
+                      /* Slew Rate Enable: Fast slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_FastSlewRate));
+
+    /* PORTE25 (pin 32) is configured as I2C0_SDA */
+    PORT_SetPinMux(PORTE, 25U, kPORT_MuxAlt5);
+
+    PORTE->PCR[25] = ((PORTE->PCR[25] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
+                      | (uint32_t)(PORT_PCR_PE_MASK)
+
+                      /* Slew Rate Enable: Fast slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_FastSlewRate));
 }
 /***********************************************************************************************************************
  * EOF

@@ -85,44 +85,44 @@ static usb_status_t USB_DeviceHidMouseAction(void)
     switch (dir)
     {
         case RIGHT:
-//            /* Move right. Increase X value. */
-//            s_UsbDeviceHidMouse.buffer[1] = 1U;
-//            s_UsbDeviceHidMouse.buffer[2] = 0U;
-//            x++;
-//            if (x > 99U)
-//            {
-//                dir++;
-//            }
+            /* Move right. Increase X value. */
+            s_UsbDeviceHidMouse.buffer[1] = 1U;
+            s_UsbDeviceHidMouse.buffer[2] = 0U;
+            x++;
+            if (x > 99U)
+            {
+                dir++;
+            }
             break;
         case DOWN:
-//            /* Move down. Increase Y value. */
-//            s_UsbDeviceHidMouse.buffer[1] = 0U;
-//            s_UsbDeviceHidMouse.buffer[2] = 1U;
-//            y++;
-//            if (y > 99U)
-//            {
-//                dir++;
-//            }
+            /* Move down. Increase Y value. */
+            s_UsbDeviceHidMouse.buffer[1] = 0U;
+            s_UsbDeviceHidMouse.buffer[2] = 1U;
+            y++;
+            if (y > 99U)
+            {
+                dir++;
+            }
             break;
         case LEFT:
-//            /* Move left. Discrease X value. */
-//            s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
-//            s_UsbDeviceHidMouse.buffer[2] = 0U;
-//            x--;
-//            if (x < 1U)
-//            {
-//                dir++;
-//            }
+            /* Move left. Discrease X value. */
+            s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
+            s_UsbDeviceHidMouse.buffer[2] = 0U;
+            x--;
+            if (x < 1U)
+            {
+                dir++;
+            }
             break;
         case UP:
-//            /* Move up. Discrease Y value. */
-//            s_UsbDeviceHidMouse.buffer[1] = 0U;
-//            s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
-//            y--;
-//            if (y < 1U)
-//            {
-//                dir = RIGHT;
-//            }
+            /* Move up. Discrease Y value. */
+            s_UsbDeviceHidMouse.buffer[1] = 0U;
+            s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
+            y--;
+            if (y < 1U)
+            {
+                dir = RIGHT;
+            }
             break;
         default:
             break;
