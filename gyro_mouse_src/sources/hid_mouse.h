@@ -53,6 +53,12 @@ enum movementOperation {
 	noMove,
 	nothing
 };
+enum clickOperation {
+	rightButton,
+	leftButton,
+	unclick,
+	empty
+};
 /*******************************************************************************
  * API
  ******************************************************************************/
@@ -67,5 +73,8 @@ void askToGoLeft(void);
 void askToGoUp(void);
 void askToGoDown(void);
 void askToGoNowhere(void);
+void pressRightButton(void);
+void pressLeftButton(void);
+void pressNothing(void);
 
 #endif /* __USB_DEVICE_HID_MOUSE_H__ */

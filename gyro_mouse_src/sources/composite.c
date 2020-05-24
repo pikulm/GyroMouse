@@ -96,6 +96,7 @@ volatile uint8_t shouldToggleTsiChannel = false;
 
 volatile enum operation typeOfOperation = none;
 volatile enum movementOperation typeOfMove = noMove;
+volatile enum clickOperation typeOfClick = unclick;
 /*******************************************************************************/
 #define BOARD_TIMER_BASEADDR TPM0
 #define BOARD_FIRST_TIMER_CHANNEL 5U
@@ -386,7 +387,7 @@ void TSI0_IRQHandler(void) {
 				> (uint16_t) (buffer.calibratedData[BOARD_TSI_ELECTRODE_2]
 						+ TOUCH_DELTA_VALUE)) { /* we are on the right side of the touch slider */
 			LED_GREEN_TOGGLE(); /* Toggle the touch event indicating LED */
-			typeOfOperation = mail;
+			typeOfClick = rightButton;
 		}
 	}
 	if (TSI_GetMeasuredChannelNumber(TSI0) == BOARD_TSI_ELECTRODE_1) {
@@ -394,7 +395,7 @@ void TSI0_IRQHandler(void) {
 				> (uint16_t) (buffer.calibratedData[BOARD_TSI_ELECTRODE_1]
 						+ TOUCH_DELTA_VALUE)) { /* we are on the left side of the touch slider */
 			LED_RED_TOGGLE(); /* Toggle the touch event indicating LED */
-			typeOfOperation = printscreen;
+			typeOfClick = leftButton;
 		}
 	}
 
@@ -518,7 +519,7 @@ int main(void)
 void main(void)
 #endif
 {
-mma_handle_t mmaHandle = {0};
+	mma_handle_t mmaHandle = {0};
     mma_data_t sensorData = {0};
     mma_config_t config = {0}; 
     status_t result; 
@@ -706,13 +707,17 @@ mma_handle_t mmaHandle = {0};
 			TSI_EnableModule(TSI0, true);
 		}
 
-		if (typeOfOperation == mail) {
-			askToSendMail();
-			typeOfOperation = none;
+		if (typeOfClick == unclick) {
+			pressNothing();
+			typeOfClick = empty;
 		}
-		else if (typeOfOperation == printscreen) {
-			askToPrintscreen();
-			typeOfOperation = none;
+		if (typeOfClick == rightButton) {
+			pressRightButton();
+			typeOfClick = unclick;
+		}
+		if (typeOfClick == leftButton) {
+			pressLeftButton();
+			typeOfClick = unclick;
 		}
 
 

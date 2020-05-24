@@ -50,6 +50,7 @@
  * Definitions
  ******************************************************************************/
 static enum movementOperation moving = noMove;
+static enum clickOperation clicking = unclick;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -82,6 +83,15 @@ void askToGoDown (void) {
 void askToGoNowhere (void) {
 	moving = noMove;
 }
+void pressLeftButton (void) {
+	clicking = leftButton;
+}
+void pressRightButton (void) {
+	clicking = rightButton;
+}
+void pressNothing (void) {
+	clicking = unclick;
+}
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
@@ -112,7 +122,19 @@ static usb_status_t USB_DeviceHidMouseAction(void)
     	break;
 
     }
-
+    switch (clicking){
+    case rightButton:
+    	s_UsbDeviceHidMouse.buffer[0] = (uint8_t)(0x2U);
+    	break;
+    case leftButton:
+    	s_UsbDeviceHidMouse.buffer[0] = (uint8_t)(0x1U);
+    	break;
+    case unclick:
+    	s_UsbDeviceHidMouse.buffer[0] = (uint8_t)(0x0U);
+    	break;
+    default:
+    	break;
+    }
 
     return USB_DeviceHidSend(s_UsbDeviceComposite->hidMouseHandle, USB_HID_MOUSE_ENDPOINT_IN,
                              s_UsbDeviceHidMouse.buffer, USB_HID_MOUSE_REPORT_LENGTH);
