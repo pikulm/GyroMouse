@@ -518,7 +518,7 @@ int main(void)
 void main(void)
 #endif
 {
-	mma_handle_t mmaHandle = {0};
+mma_handle_t mmaHandle = {0};
     mma_data_t sensorData = {0};
     mma_config_t config = {0}; 
     status_t result; 
@@ -728,26 +728,32 @@ void main(void)
 		if (yAngle < -30){
 			typeOfMove = UP;
 		}
-
+		if ((-30 <= xAngle) &&(xAngle <= 30) && (-30 <= yAngle)&& (yAngle <= 30) ){
+			typeOfMove = noMove;
+		}
 
 
 
 
 		if (typeOfMove == RIGHT) {
 			askToGoRight();
-			typeOfMove = noMove;
+			typeOfMove = nothing;
 		}
 		if (typeOfMove == LEFT) {
 			askToGoLeft();
-			typeOfMove = noMove;
+			typeOfMove = nothing;
 		}
 		if (typeOfMove == UP) {
 			askToGoUp();
-			typeOfMove = noMove;
+			typeOfMove = nothing;
 		}
 		if (typeOfMove == DOWN) {
 			askToGoDown();
-			typeOfMove = noMove;
+			typeOfMove = nothing;
+		}
+		if (typeOfMove == noMove){
+			askToGoNowhere();
+			typeOfMove = nothing;
 		}
 	}
 }

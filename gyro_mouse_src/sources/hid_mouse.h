@@ -50,7 +50,8 @@ enum movementOperation {
 	LEFT,
 	UP,
 	DOWN,
-	noMove
+	noMove,
+	nothing
 };
 /*******************************************************************************
  * API
@@ -65,5 +66,6 @@ void askToGoRight(void);
 void askToGoLeft(void);
 void askToGoUp(void);
 void askToGoDown(void);
+void askToGoNowhere(void);
 
 #endif /* __USB_DEVICE_HID_MOUSE_H__ */

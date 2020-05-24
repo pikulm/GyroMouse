@@ -79,7 +79,9 @@ void askToGoUp (void) {
 void askToGoDown (void) {
 	moving = DOWN;
 }
-
+void askToGoNowhere (void) {
+	moving = noMove;
+}
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
@@ -102,10 +104,13 @@ static usb_status_t USB_DeviceHidMouseAction(void)
         s_UsbDeviceHidMouse.buffer[1] = 0U;
         s_UsbDeviceHidMouse.buffer[2] = 1U;
         break;
-    default:
+    case noMove:
         s_UsbDeviceHidMouse.buffer[1] = 0U;
         s_UsbDeviceHidMouse.buffer[2] = 0U;
     	break;
+    case nothing:
+    	break;
+
     }
 
 
