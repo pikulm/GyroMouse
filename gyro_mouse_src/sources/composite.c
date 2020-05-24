@@ -657,6 +657,43 @@ void main(void)
 		USB_DeviceTaskFn(g_UsbDeviceComposite.deviceHandle);
 #endif
 
+        /* Get new accelerometer data. */
+        if (MMA_ReadSensorData(&mmaHandle, &sensorData) != kStatus_Success)
+        {
+            return -1;
+        }
+
+        /* Get the X and Y data from the sensor data structure in 14 bit left format data*/
+        xData = (int16_t)((uint16_t)((uint16_t)sensorData.accelXMSB << 8) | (uint16_t)sensorData.accelXLSB) / 4U;
+        yData = (int16_t)((uint16_t)((uint16_t)sensorData.accelYMSB << 8) | (uint16_t)sensorData.accelYLSB) / 4U;
+
+        /* Convert raw data to angle (normalize to 0-90 degrees). No negative angles. */
+        xAngle = (int16_t)floor((double)xData * (double)dataScale * 90 / 8192);
+        yAngle = (int16_t)floor((double)yData * (double)dataScale * 90 / 8192);
+        /* Update duty cycle to turn on LEDs when angles ~ 90 */
+        if (xAngle > ANGLE_UPPER_BOUND)
+        {
+            xDuty = 100;
+        }
+        if (yAngle > ANGLE_UPPER_BOUND)
+        {
+            yDuty = 100;
+        }
+        /* Update duty cycle to turn off LEDs when angles ~ 0 */
+        if (xAngle < ANGLE_LOWER_BOUND)
+        {
+            xDuty = 0;
+        }
+        if (yAngle < ANGLE_LOWER_BOUND)
+        {
+            yDuty = 0;
+        }
+
+        Board_UpdatePwm(xDuty, yDuty);
+
+        /* Print out the angle data. */
+        PRINTF("x= %2d y = %2d\r\n", xAngle, yAngle);
+
 		if (shouldToggleTsiChannel == true) {
 			shouldToggleTsiChannel = false;
 			TSI_EnableModule(TSI0, false);
