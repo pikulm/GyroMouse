@@ -95,6 +95,7 @@
 volatile uint8_t shouldToggleTsiChannel = false;
 
 volatile enum operation typeOfOperation = none;
+volatile enum movementOperation typeOfMove = noMove;
 /*******************************************************************************/
 #define BOARD_TIMER_BASEADDR TPM0
 #define BOARD_FIRST_TIMER_CHANNEL 5U
@@ -712,6 +713,41 @@ void main(void)
 		else if (typeOfOperation == printscreen) {
 			askToPrintscreen();
 			typeOfOperation = none;
+		}
+
+
+		if (xAngle > 30){
+			typeOfMove = LEFT;
+		}
+		if (xAngle < -30){
+			typeOfMove = RIGHT;
+		}
+		if (yAngle > 30){
+			typeOfMove = DOWN;
+		}
+		if (yAngle < -30){
+			typeOfMove = UP;
+		}
+
+
+
+
+
+		if (typeOfMove == RIGHT) {
+			askToGoRight();
+			typeOfMove = noMove;
+		}
+		if (typeOfMove == LEFT) {
+			askToGoLeft();
+			typeOfMove = noMove;
+		}
+		if (typeOfMove == UP) {
+			askToGoUp();
+			typeOfMove = noMove;
+		}
+		if (typeOfMove == DOWN) {
+			askToGoDown();
+			typeOfMove = noMove;
 		}
 	}
 }

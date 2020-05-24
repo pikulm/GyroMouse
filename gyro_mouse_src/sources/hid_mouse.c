@@ -49,7 +49,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-
+static enum movementOperation moving = noMove;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -67,66 +67,48 @@ static usb_device_hid_mouse_struct_t s_UsbDeviceHidMouse;
 /*******************************************************************************
  * Code
  ******************************************************************************/
+void askToGoRight (void) {
+	moving = RIGHT;
+}
+void askToGoLeft (void) {
+	moving = LEFT;
+}
+void askToGoUp (void) {
+	moving = UP;
+}
+void askToGoDown (void) {
+	moving = DOWN;
+}
+
 
 /* Update mouse pointer location. Draw a rectangular rotation*/
 static usb_status_t USB_DeviceHidMouseAction(void)
 {
-    static int8_t x = 0U;
-    static int8_t y = 0U;
-    enum
-    {
-        RIGHT,
-        DOWN,
-        LEFT,
-        UP
-    };
-    static uint8_t dir = RIGHT;
 
-    switch (dir)
-    {
-        case RIGHT:
-            /* Move right. Increase X value. */
-            s_UsbDeviceHidMouse.buffer[1] = 1U;
-            s_UsbDeviceHidMouse.buffer[2] = 0U;
-            x++;
-            if (x > 99U)
-            {
-                dir++;
-            }
-            break;
-        case DOWN:
-            /* Move down. Increase Y value. */
-            s_UsbDeviceHidMouse.buffer[1] = 0U;
-            s_UsbDeviceHidMouse.buffer[2] = 1U;
-            y++;
-            if (y > 99U)
-            {
-                dir++;
-            }
-            break;
-        case LEFT:
-            /* Move left. Discrease X value. */
-            s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
-            s_UsbDeviceHidMouse.buffer[2] = 0U;
-            x--;
-            if (x < 1U)
-            {
-                dir++;
-            }
-            break;
-        case UP:
-            /* Move up. Discrease Y value. */
-            s_UsbDeviceHidMouse.buffer[1] = 0U;
-            s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
-            y--;
-            if (y < 1U)
-            {
-                dir = RIGHT;
-            }
-            break;
-        default:
-            break;
+    switch(moving){
+    case RIGHT:
+        s_UsbDeviceHidMouse.buffer[1] = 1U;
+        s_UsbDeviceHidMouse.buffer[2] = 0U;
+        break;
+    case LEFT:
+        s_UsbDeviceHidMouse.buffer[1] = (uint8_t)(0xFFU);
+        s_UsbDeviceHidMouse.buffer[2] = 0U;
+        break;
+    case UP:
+        s_UsbDeviceHidMouse.buffer[1] = 0U;
+        s_UsbDeviceHidMouse.buffer[2] = (uint8_t)(0xFFU);
+        break;
+    case DOWN:
+        s_UsbDeviceHidMouse.buffer[1] = 0U;
+        s_UsbDeviceHidMouse.buffer[2] = 1U;
+        break;
+    default:
+        s_UsbDeviceHidMouse.buffer[1] = 0U;
+        s_UsbDeviceHidMouse.buffer[2] = 0U;
+    	break;
     }
+
+
     return USB_DeviceHidSend(s_UsbDeviceComposite->hidMouseHandle, USB_HID_MOUSE_ENDPOINT_IN,
                              s_UsbDeviceHidMouse.buffer, USB_HID_MOUSE_REPORT_LENGTH);
 }
